@@ -4,9 +4,9 @@
 org 100h
 
 .data
-a dw 5
-b dw 1
-c dw 20
+a dw 1
+b dw 4
+c dw -2
 Denominator dd 0
 Numerator dd 0
 result dd ?
@@ -14,27 +14,29 @@ result dd ?
 .code                
 ;Denominator
 mov ax, [c] ; AX = c
-mul [b] ; DX:AX = c*b
-shr ax, 1 ; AX = c*b/2
+imul [b] ; DX:AX = c*b 
+mov bx, 2
+cwd
+idiv bx ; AX = c*b/2
 inc ax ; AX = c*b/2 + 1 
 mov [Denominator], ax  
 
 ;Numerator
 mov ax, -25 ; AX = -25
 cwd ; DX:AX = -25
-idiv [a] ; DX:AX = -25/a
+idiv [a] ; DX:AX = -25/a 
+add ax, [c] 
+mov bx, ax
 
-mov bx, [a] ; BX = a
-mul [b] ; DX:AX = b*a
-neg ax ; AX = -b*a
-add ax, [c] ; AX = -b*a + c
-add ax, dx ; AX = -25/a + c - b*a  
-mov [Numerator], ax 
-
+mov ax, [a] ; BX = a
+imul [b] ; DX:AX = b*a 
+sub bx, ax 
+mov [Numerator], bx 
+    
 ;Division
 mov ax, [Numerator]
 cwd ; DX:AX = Numerator
-div word ptr [Denominator] ; AX = Numerator/Denominator
+idiv word ptr [Denominator] ; AX = Numerator/Denominator
 
 mov [result], ax
 
