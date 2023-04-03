@@ -3,8 +3,8 @@
 org 100h
 
 .data
-a dd 2
-b dd 4
+a dd 10
+b dd 2
 x db 0
 
 .code
@@ -22,6 +22,7 @@ jmp @@3
 mov ax, [b] 
 add ax, 5 
 mov bx, [a] 
+cwd
 idiv bx 
 mov [x], al
 jmp @@3
@@ -29,7 +30,8 @@ jmp @@3
 @@2:
 mov ax, [b] 
 sub ax, [a] 
-mov bx, [b] 
+mov bx, [b]
+cwd 
 idiv bx 
 mov [x], al 
 jmp @@3
